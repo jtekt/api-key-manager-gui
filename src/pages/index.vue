@@ -15,23 +15,12 @@
       <template #item.lastUsedAt="{ item }">{{ item.lastUsedAt ? fmt(item.lastUsedAt) : '—' }}</template>
       <template #item.expiresAt="{ item }">{{ item.expiresAt ? fmt(item.expiresAt) : 'Never' }}</template>
       <template #item.actions="{ item }">
-        <DeleteKeyButton
-          :key-id="item.id"
-          :user-id="userId"
-          :disabled="item.revoked"
-          @deleted="onDeleted"
-          @error="notify"
-        />
+        <DeleteKeyButton :key-id="item.id" :disabled="item.revoked" @deleted="onDeleted" @error="notify" />
       </template>
     </v-data-table>
   </v-container>
 
-  <CreateKeyDialog
-    v-model="createDialog"
-    :user-id="userId"
-    @created="onCreated"
-    @error="notify"
-  />
+  <CreateKeyDialog v-model="createDialog" @created="onCreated" @error="notify" />
 
   <KeyRevealDialog v-model="revealDialog" :api-key="newKey" />
 
@@ -40,8 +29,10 @@
 
 <script lang="ts" setup>
 import { ref, reactive, onMounted } from 'vue'
-import { userId } from '@/composables/useUserId'
 import { apiBase } from '@/api'
+import { useAuth } from '@/composables/useAuth'
+
+const { getAuthHeaders } = useAuth()
 
 interface ApiKey {
   id: string
@@ -89,7 +80,7 @@ function notify(text: string, color = 'error') {
 async function fetchKeys() {
   loading.value = true
   try {
-    const res = await fetch(`${apiBase}/keys`, { headers: { 'X-User-ID': userId.value } })
+    const res = await fetch(`${apiBase}/keys`, { headers: getAuthHeaders() })
     if (!res.ok) throw new Error('Failed to load keys')
     keys.value = await res.json()
   } catch (e: any) {

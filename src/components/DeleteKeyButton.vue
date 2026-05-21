@@ -23,10 +23,12 @@
 <script lang="ts" setup>
 import { ref } from 'vue'
 import { apiBase } from '@/api'
+import { useAuth } from '@/composables/useAuth'
 
-const props = defineProps<{ keyId: string; userId: string; disabled?: boolean }>()
+const props = defineProps<{ keyId: string; disabled?: boolean }>()
 const emit = defineEmits<{ deleted: []; error: [message: string] }>()
 
+const { getAuthHeaders } = useAuth()
 const dialog = ref(false)
 const loading = ref(false)
 
@@ -35,7 +37,7 @@ async function confirm() {
   try {
     const res = await fetch(`${apiBase}/keys/${props.keyId}`, {
       method: 'DELETE',
-      headers: { 'X-User-ID': props.userId },
+      headers: getAuthHeaders(),
     })
     if (!res.ok) throw new Error('Failed to revoke key')
     dialog.value = false

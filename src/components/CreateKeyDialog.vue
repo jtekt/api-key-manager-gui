@@ -34,13 +34,16 @@
 <script lang="ts" setup>
 import { ref, watch } from "vue";
 import { apiBase } from "@/api";
+import { useAuth } from "@/composables/useAuth";
 
-const props = defineProps<{ modelValue: boolean; userId: string }>();
+const props = defineProps<{ modelValue: boolean }>();
 const emit = defineEmits<{
   "update:modelValue": [value: boolean];
   created: [apiKey: string];
   error: [message: string];
 }>();
+
+const { getAuthHeaders } = useAuth();
 
 const name = ref("");
 const expiresAt = ref("");
@@ -66,10 +69,7 @@ async function submit() {
 
     const res = await fetch(`${apiBase}/keys`, {
       method: "POST",
-      headers: {
-        "X-User-ID": props.userId,
-        "Content-Type": "application/json",
-      },
+      headers: { ...getAuthHeaders(), "Content-Type": "application/json" },
       body: JSON.stringify(body),
     });
     if (!res.ok) throw new Error("Failed to create key");

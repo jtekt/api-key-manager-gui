@@ -16,8 +16,10 @@ import { createApp } from 'vue'
 // Styles
 import 'unfonts.css'
 
+import { initAuth } from '@/composables/useAuth'
+
 const app = createApp(App)
 
 registerPlugins(app)
 
-app.mount('#app')
+initAuth().then(() => app.mount('#app'))

@@ -4,13 +4,19 @@
  * Automatic routes for `./src/pages/*.vue`
  */
 
-// Composables
 import { createRouter, createWebHistory } from 'vue-router/auto'
 import { routes } from 'vue-router/auto-routes'
+import { useAuth } from '@/composables/useAuth'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes,
+})
+
+router.beforeEach(to => {
+  if (to.path === '/callback') return true
+  const { isOidc, isAuthenticated, login } = useAuth()
+  if (isOidc && !isAuthenticated.value) { login(); return false }
 })
 
 // Workaround for https://github.com/vitejs/vite/issues/11804
