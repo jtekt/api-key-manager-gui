@@ -15,14 +15,12 @@
       <template #item.lastUsedAt="{ item }">{{ item.lastUsedAt ? fmt(item.lastUsedAt) : '—' }}</template>
       <template #item.expiresAt="{ item }">{{ item.expiresAt ? fmt(item.expiresAt) : 'Never' }}</template>
       <template #item.actions="{ item }">
-        <v-btn
-          icon="mdi-delete-outline"
-          variant="text"
-          color="error"
-          size="small"
+        <DeleteKeyButton
+          :key-id="item.id"
+          :user-id="userId"
           :disabled="item.revoked"
-          :loading="revoking === item.id"
-          @click="revoke(item.id)"
+          @deleted="onDeleted"
+          @error="notify"
         />
       </template>
     </v-data-table>
@@ -43,6 +41,7 @@
 <script lang="ts" setup>
 import { ref, reactive, onMounted } from 'vue'
 import { userId } from '@/composables/useUserId'
+import { apiBase } from '@/api'
 
 interface ApiKey {
   id: string
@@ -55,7 +54,6 @@ interface ApiKey {
 
 const keys = ref<ApiKey[]>([])
 const loading = ref(false)
-const revoking = ref<string | null>(null)
 const createDialog = ref(false)
 const revealDialog = ref(false)
 const newKey = ref('')
@@ -91,7 +89,7 @@ function notify(text: string, color = 'error') {
 async function fetchKeys() {
   loading.value = true
   try {
-    const res = await fetch('/keys', { headers: { 'X-User-ID': userId.value } })
+    const res = await fetch(`${apiBase}/keys`, { headers: { 'X-User-ID': userId.value } })
     if (!res.ok) throw new Error('Failed to load keys')
     keys.value = await res.json()
   } catch (e: any) {
@@ -101,21 +99,9 @@ async function fetchKeys() {
   }
 }
 
-async function revoke(id: string) {
-  revoking.value = id
-  try {
-    const res = await fetch(`/keys/${id}`, {
-      method: 'DELETE',
-      headers: { 'X-User-ID': userId.value },
-    })
-    if (!res.ok) throw new Error('Failed to revoke key')
-    notify('Key revoked', 'success')
-    await fetchKeys()
-  } catch (e: any) {
-    notify(e.message)
-  } finally {
-    revoking.value = null
-  }
+async function onDeleted() {
+  notify('Key revoked', 'success')
+  await fetchKeys()
 }
 
 async function onCreated(apiKey: string) {

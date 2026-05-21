@@ -33,6 +33,7 @@
 
 <script lang="ts" setup>
 import { ref, watch } from "vue";
+import { apiBase } from "@/api";
 
 const props = defineProps<{ modelValue: boolean; userId: string }>();
 const emit = defineEmits<{
@@ -63,7 +64,7 @@ async function submit() {
     if (expiresAt.value)
       body.expires_at = new Date(expiresAt.value).toISOString();
 
-    const res = await fetch("/keys", {
+    const res = await fetch(`${apiBase}/keys`, {
       method: "POST",
       headers: {
         "X-User-ID": props.userId,

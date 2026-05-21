@@ -9,6 +9,7 @@ export {}
 declare module 'vue' {
   export interface GlobalComponents {
     CreateKeyDialog: typeof import('./components/CreateKeyDialog.vue')['default']
+    DeleteKeyButton: typeof import('./components/DeleteKeyButton.vue')['default']
     HelloWorld: typeof import('./components/HelloWorld.vue')['default']
     KeyRevealDialog: typeof import('./components/KeyRevealDialog.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
