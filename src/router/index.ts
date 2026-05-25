@@ -4,8 +4,9 @@
  * Automatic routes for `./src/pages/*.vue`
  */
 
-import { createRouter, createWebHistory } from 'vue-router/auto'
+import { createRouter, createWebHistory } from 'vue-router'
 import { routes } from 'vue-router/auto-routes'
+import type { RouteLocationNormalized } from 'vue-router'
 import { useAuth } from '@/composables/useAuth'
 
 const router = createRouter({
@@ -13,14 +14,14 @@ const router = createRouter({
   routes,
 })
 
-router.beforeEach(to => {
+router.beforeEach((to: RouteLocationNormalized) => {
   if (to.path === '/callback') return true
   const { isOidc, isAuthenticated, login } = useAuth()
   if (isOidc && !isAuthenticated.value) { login(); return false }
 })
 
 // Workaround for https://github.com/vitejs/vite/issues/11804
-router.onError((err, to) => {
+router.onError((err: Error, to: RouteLocationNormalized) => {
   if (err?.message?.includes?.('Failed to fetch dynamically imported module')) {
     if (localStorage.getItem('vuetify:dynamic-reload')) {
       console.error('Dynamic import error, reloading page did not fix it', err)

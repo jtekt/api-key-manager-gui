@@ -7,6 +7,5 @@ export const userManager = import.meta.env.VITE_OIDC_AUTHORITY
       redirect_uri: `${window.location.origin}/callback`,
       scope: 'openid profile email',
       automaticSilentRenew: true,
-      useRefreshTokens: true,
     })
   : null
