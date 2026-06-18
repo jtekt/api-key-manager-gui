@@ -2,6 +2,9 @@
   <v-app>
     <v-app-bar title="API Key Manager">
       <template #append>
+        <ThemeToggler />
+        <v-btn v-if="VITE_APPS_URL" :href="VITE_APPS_URL" icon="mdi-apps" />
+
         <template v-if="isOidc">
           <v-btn
             v-if="isAuthenticated"
@@ -24,7 +27,9 @@
       </template>
     </v-app-bar>
     <v-main>
-      <router-view />
+      <v-container>
+        <router-view />
+      </v-container>
     </v-main>
   </v-app>
 </template>
@@ -32,6 +37,9 @@
 <script lang="ts" setup>
 import { useAuth } from "@/composables/useAuth";
 import { userId } from "@/composables/useUserId";
+import ThemeToggler from "@/components/ThemeToggle.vue";
+
+const { VITE_APPS_URL } = import.meta.env;
 
 const { isOidc, isAuthenticated, login, logout } = useAuth();
 </script>

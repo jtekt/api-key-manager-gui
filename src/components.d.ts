@@ -13,5 +13,6 @@ declare module 'vue' {
     KeyRevealDialog: typeof import('./components/KeyRevealDialog.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
+    ThemeToggle: typeof import('./components/ThemeToggle.vue')['default']
   }
 }
