@@ -127,7 +127,13 @@ async function fetchKeys() {
   }
 }
 
-function onOptions({ page, itemsPerPage }: { page: number; itemsPerPage: number }) {
+function onOptions({
+  page,
+  itemsPerPage,
+}: {
+  page: number;
+  itemsPerPage: number;
+}) {
   currentPage = page;
   currentItemsPerPage = itemsPerPage;
   fetchKeys();

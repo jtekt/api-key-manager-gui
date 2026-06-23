@@ -44,6 +44,12 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: ${APPLICATION_NAME}
+  annotations:
+    gethomepage.dev/enabled: "true"
+    gethomepage.dev/name: API Key Manager
+    gethomepage.dev/icon: mdi-key
+    gethomepage.dev/group: 業務アプリ
+    gethomepage.dev/pod-selector: app=${APPLICATION_NAME}
 spec:
   rules:
     - host: api-key-manager.jtektrnd.net
