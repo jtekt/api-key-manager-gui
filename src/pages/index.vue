@@ -1,12 +1,25 @@
 <template>
   <v-card title="My API keys">
     <template #append>
-      <v-btn
-        color="primary"
-        prepend-icon="mdi-plus"
-        @click="createDialog = true"
-        text="New key"
-      />
+      <v-row>
+        <v-col>
+          <v-checkbox
+            v-model="showRevoked"
+            label="Revoked"
+            density="compact"
+            hide-details
+            @update:model-value="onShowRevokedChange"
+          />
+        </v-col>
+        <v-col>
+          <v-btn
+            color="primary"
+            prepend-icon="mdi-plus"
+            @click="createDialog = true"
+            text="New key"
+          />
+        </v-col>
+      </v-row>
     </template>
 
     <v-data-table-server
@@ -75,6 +88,7 @@ const total = ref(0);
 const loading = ref(false);
 const createDialog = ref(false);
 const revealDialog = ref(false);
+const showRevoked = ref(false);
 const newKey = ref("");
 const snack = reactive({ show: false, text: "", color: "" });
 
@@ -112,10 +126,14 @@ async function fetchKeys() {
   loading.value = true;
   const offset = (currentPage - 1) * currentItemsPerPage;
   try {
-    const res = await fetch(
-      `${apiBase}/keys?limit=${currentItemsPerPage}&offset=${offset}`,
-      { headers: getAuthHeaders() },
-    );
+    const params = new URLSearchParams({
+      limit: String(currentItemsPerPage),
+      offset: String(offset),
+    });
+    if (!showRevoked.value) params.set("revoked", "false");
+    const res = await fetch(`${apiBase}/keys?${params}`, {
+      headers: getAuthHeaders(),
+    });
     if (!res.ok) throw new Error("Failed to load keys");
     const data = await res.json();
     keys.value = data.items;
@@ -125,6 +143,11 @@ async function fetchKeys() {
   } finally {
     loading.value = false;
   }
+}
+
+function onShowRevokedChange() {
+  currentPage = 1;
+  fetchKeys();
 }
 
 function onOptions({
