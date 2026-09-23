@@ -25,8 +25,6 @@ spec:
             - name: VITE_APPS_URL
               value: https://apps.jtektrnd.net
           resources: {}
-      imagePullSecrets:
-        - name: ecr-credentials
 
 ---
 apiVersion: v1

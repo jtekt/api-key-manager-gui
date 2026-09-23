@@ -3,6 +3,7 @@
     <v-app-bar title="API Key Manager">
       <template #append>
         <ThemeToggler />
+        <v-btn icon="mdi-information-outline" to="/about" />
         <v-btn v-if="VITE_APPS_URL" :href="VITE_APPS_URL" icon="mdi-apps" />
 
         <template v-if="isOidc">
