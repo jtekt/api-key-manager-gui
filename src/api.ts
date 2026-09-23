@@ -1,1 +1,3 @@
-export const apiBase = (import.meta.env.VITE_API_BASE_URL as string | undefined) ?? 'http://localhost:3000'
+import runtimeEnv from '@/runtimeEnv'
+
+export const apiBase = runtimeEnv.VITE_API_BASE_URL || 'http://localhost:3000'

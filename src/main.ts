@@ -4,19 +4,18 @@
  * Bootstraps Vuetify and other plugins then mounts the App`
  */
 
+// Composables
+import { createApp } from 'vue'
+
+import { initAuth } from '@/composables/useAuth'
 // Plugins
 import { registerPlugins } from '@/plugins'
 
 // Components
 import App from './App.vue'
 
-// Composables
-import { createApp } from 'vue'
-
 // Styles
 import 'unfonts.css'
-
-import { initAuth } from '@/composables/useAuth'
 
 const app = createApp(App)
 

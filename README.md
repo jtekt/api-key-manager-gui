@@ -46,3 +46,7 @@ npm run lint    # ESLint with auto-fix
 - `src/composables/` — `useAuth` (auth headers, login/logout) and `useUserId` (dev-mode user id)
 - `src/api.ts` — resolves `apiBase` from `VITE_API_BASE_URL`
 - `@` resolves to `src/`
+
+## Deployment
+
+The Docker image is built once and configured at container start. `40-env-config.sh` runs from nginx's `/docker-entrypoint.d/` and writes every `VITE_*` environment variable into `/env.js` as `window.__ENV__`, which `index.html` loads before the app. `src/runtimeEnv.ts` merges it over the build-time `import.meta.env`, so runtime values win. Read configuration through `runtimeEnv` rather than `import.meta.env`.

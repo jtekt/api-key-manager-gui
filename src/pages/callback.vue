@@ -5,14 +5,14 @@
 </template>
 
 <script lang="ts" setup>
-import { onMounted } from 'vue'
-import { useRouter } from 'vue-router'
-import { userManager } from '@/oidc'
+  import { onMounted } from 'vue'
+  import { useRouter } from 'vue-router'
+  import { userManager } from '@/oidc'
 
-const router = useRouter()
+  const router = useRouter()
 
-onMounted(async () => {
-  await userManager?.signinRedirectCallback()
-  router.push('/')
-})
+  onMounted(async () => {
+    await userManager?.signinRedirectCallback()
+    router.push('/')
+  })
 </script>

@@ -8,24 +8,27 @@
         <template v-if="isOidc">
           <v-btn
             v-if="isAuthenticated"
+            icon="mdi-logout"
             variant="text"
             @click="logout"
-            icon="mdi-logout"
           />
-          <v-btn v-else variant="text" @click="login" icon="mdi-login" />
+
+          <v-btn v-else icon="mdi-login" variant="text" @click="login" />
         </template>
+
         <v-text-field
           v-else
           v-model="userId"
-          label="User ID"
+          class="mr-3"
           density="compact"
           hide-details
+          label="User ID"
           variant="outlined"
           width="200"
-          class="mr-3"
         />
       </template>
     </v-app-bar>
+
     <v-main>
       <v-container>
         <router-view />
@@ -35,11 +38,12 @@
 </template>
 
 <script lang="ts" setup>
-import { useAuth } from "@/composables/useAuth";
-import { userId } from "@/composables/useUserId";
-import ThemeToggler from "@/components/ThemeToggle.vue";
+  import ThemeToggler from '@/components/ThemeToggle.vue'
+  import { useAuth } from '@/composables/useAuth'
+  import { userId } from '@/composables/useUserId'
+  import runtimeEnv from '@/runtimeEnv'
 
-const { VITE_APPS_URL } = import.meta.env;
+  const { VITE_APPS_URL } = runtimeEnv
 
-const { isOidc, isAuthenticated, login, logout } = useAuth();
+  const { isOidc, isAuthenticated, login, logout } = useAuth()
 </script>
